@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Precipitation</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""/>
+    <link rel="stylesheet" type="text/css" href="rainpreciptaion.css">
+    
+    <!-- BoxIcons for the modal icon -->
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body style="padding:0; margin:0">
+
+    <!-- Modal Structure -->
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <i class='bx bxs-cloud-rain bx-lg'></i>
+            <p>Welcome to Real-time Precipitation Viewer!</p>
+        </div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="mapid" style="width: 100%; height: 100vh; padding:0"></div>
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
+    
+    <script src="rainpreciptaion.js"></script>
+
+    <!-- JavaScript for Modal -->
+    <script>
+        window.onload = function () {
+            // Get the modal
+            var modal = document.getElementById("welcomeModal");
+
+            // Get the <span> element that closes the modal
+            var closeBtn = document.querySelector(".close-btn");
+
+            // Show modal on page load
+            modal.style.display = "block";
+
+            // Close modal when user clicks on <span> (x)
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            // Close modal when user clicks anywhere outside of the modal content
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
+        };
+
+        // Leaflet Map Initialization
+        var mymap = L.map('mapid', {}).setView([51.505, 18.09], 6);
+
+        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, {
+            minZoom: 6,
+            maxZoom: 12,
+            attribution: osmAttrib
+        });
+        mymap.addLayer(osm);
+
+        var rainviewer = L.control.rainviewer({
+            position: 'bottomleft',
+            nextButtonText: '>',
+            playStopButtonText: 'Start/Stop',
+            prevButtonText: '<',
+            positionSliderLabelText: "Time:",
+            opacitySliderLabelText: "Opacity:",
+            animationInterval: 500,
+            opacity: 0.5
+        });
+        rainviewer.addTo(mymap);
+    </script>
+</body>
+</html>

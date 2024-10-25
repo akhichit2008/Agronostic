@@ -1,0 +1,108 @@
+<!-- chat_widget.html -->
+<div id="chat-toggle-btn">💬</div>
+
+<div class="chat-widget">
+    <div class="chat-header">AgroAssist</div>
+    <div id="chat-box" class="chat-box"></div>
+    <div class="chat-footer">
+        <input type="text" id="query-input" placeholder="Ask a question...">
+        <button id="send-btn">Send</button>
+    </div>
+</div>
+
+<style>
+    /* Chat widget and toggle button styling */
+    #chat-toggle-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .chat-widget {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 300px;
+        max-height: 400px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        display: none;
+    }
+
+    .chat-header {
+        background: #4CAF50;
+        padding: 10px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .chat-box {
+        padding: 15px;
+        height: 250px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+    }
+
+    .chat-footer {
+        display: flex;
+        padding: 10px;
+    }
+
+    .chat-footer input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .chat-footer button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        border: none;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Toggle chat widget visibility
+        $('#chat-toggle-btn').on('click', function () {
+            $('.chat-widget').toggle();
+        });
+
+        // Send query to backend and display response
+        $('#send-btn').on('click', function () {
+            let userQuery = $('#query-input').val();
+            if (userQuery.trim()) {
+                $('#chat-box').append('<div class="chat-message user">You: ' + userQuery + '</div>');
+                $('#query-input').val('');
+                $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+
+                $.ajax({
+    type: "POST",
+    url: "http://localhost:3500/ask",  // Ensure this matches your Flask server
+    data: {
+        query: $('#queryInput').val()  // Assuming you have an input field with this ID
+    },
+    success: function(response) {
+        console.log(response); // Check the response in the console
+        // Update your UI with the response here
+    },
+    error: function(xhr, status, error) {
+        console.error("Error: ", error); // Log any error for debugging
+    }
+});
+
+            }
+        });
+    });
+</script>
